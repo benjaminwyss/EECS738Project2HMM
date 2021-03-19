@@ -1,14 +1,12 @@
 import pandas as pd
 import numpy as np
+import hmm
 
-df = pd.read_csv('data/onionArticles.csv', dtype=str)
-onionArticles = np.array(df)
+df = pd.read_csv('data/onionArticles.csv', dtype=str, header=None)
+onionArticles = np.array(df, dtype=str)
 
-uniqueWords = []
+model = hmm.hmm()
+model.fit(onionArticles)
 
-for article in onionArticles:
-	for word in str(article).split():
-		if word not in uniqueWords:
-			uniqueWords.append(word)
-
-print(len(uniqueWords))
+for _ in range(100):
+	print(model.generateFakeText())

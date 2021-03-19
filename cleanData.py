@@ -6,9 +6,9 @@ df = df[df.label == 1]
 
 for index, row in df.iterrows():
 	text = str(row['text'])
-	cleanText = ''
+	cleanText = '<start> '
 	for c in text:
-		if c in ["'", '"', ':', '‘', '’', '.', ',', '?', '!', '“', '”', ';', '(', ')', '[', ']', '`']:
+		if c in ["'", '"', ':', '‘', '’', '.', ',', '?', '!', '“', '”', ';', '(', ')', '[', ']', '`', 'â', '\x80', '\x99', '\u200b', '·']:
 			continue
 		elif c in ['—', '-', '–', '/', '\\', '|']:
 			cleanText += ' '
@@ -17,7 +17,7 @@ for index, row in df.iterrows():
 		else:
 			cleanText += c
 
-	
+	cleanText += ' <end>'
 
 	df.at[index, 'text'] = cleanText.lower()
 	

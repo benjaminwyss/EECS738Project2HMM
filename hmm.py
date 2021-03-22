@@ -41,15 +41,56 @@ class hmm:
 
 		
 	def generateFakeText(self):
+		# Start at begin state
 		currState = 0
 		fakeText = ""
 		while True:
+			# Randomly determine next state based on transition matrix
 			nextState = np.random.choice(self.allStates, 1, p=self.transitionMatrix[currState])[0]
 			
+			# Break if the next state is the end state
 			if nextState == 1:
 				break
 
+			# Otherwise, add the next state's word to the fake text and update current state
 			fakeText += self.stateWordDict[nextState] + " "
 			currState = nextState
 
 		return fakeText
+
+	def predictText(self, prompt):
+		# Clean prompt text
+		cleanText = ""
+		for c in prompt:
+			if c in ["'", '"', ':', '‘', '’', '.', ',', '?', '!', '“', '”', ';', '(', ')', '[', ']', '`', 'â', '\x80', '\x99', '\u200b', '·']:
+				continue
+			elif c in ['—', '-', '–', '/', '\\', '|']:
+				cleanText += ' '
+			elif c == '%':
+				cleanText += ' percent'
+			else:
+				cleanText += c
+			
+		prompt = cleanText.lower()
+
+		# Determine current state from the prompt
+		lastWord = prompt.split()[-1]
+		
+		if lastWord not in self.wordStateDict:
+			return "Error. Prompt contains words not learned by the Hidden Markov Model."
+
+		predictedText = ""
+		currState = self.wordStateDict[lastWord]
+		while True:
+			# Determine most likely next state
+			nextState = np.argmax(self.transitionMatrix[currState])
+
+			# Break if the next state is the end state or if a word is repeated (this second condition avoids infinite loops)
+			if nextState == 1 or self.stateWordDict[nextState] in predictedText:
+				break
+
+			# Otherwise, add the next state's word to the fake text and update current state
+			predictedText += " " + self.stateWordDict[nextState]
+			currState = nextState
+
+		return prompt + predictedText

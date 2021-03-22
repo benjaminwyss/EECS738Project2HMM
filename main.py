@@ -10,3 +10,6 @@ model.fit(onionArticles)
 
 for _ in range(100):
 	print(model.generateFakeText())
+
+prompt = input("Enter your prompt for predicting text: ")
+print(model.predictText(prompt))

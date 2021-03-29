@@ -28,6 +28,8 @@ A Hidden Markov Model is implemented in [hmm.py](https://github.com/benjaminwyss
 
 `py main.py <flag (use -g to generate text or -p to predict text)>`
 
+I recommend executing the program from Windows Powershell because the text corpus contains some strange unicode encodings that Git Bash shells cannot handle.
+
 ## Results
 
 Generating fake text from Onion Articles appears to be able to create fake article titles that are humerous, grammatical, and sound like [The Onion](https://www.theonion.com/). Some selected samples with clarifying punctuation added are listed below:
